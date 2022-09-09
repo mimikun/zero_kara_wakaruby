@@ -1,0 +1,4 @@
+COFFEE = 400
+ESP_SHOT = 100
+
+puts COFFEE + ESP_SHOT*2
