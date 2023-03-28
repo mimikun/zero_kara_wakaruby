@@ -1,16 +1,32 @@
 today   = $(shell date "+%Y%m%d")
+product_name = zero_kara_wakaruby
 
 .PHONY : patch
-patch : diff-patch
-
-.PHONY : format-patch
-format-patch :
-	git format-patch master
+patch : clean-patch diff-patch copy2win-patch
 
 .PHONY : diff-patch
 diff-patch :
-	git diff master > zero_kara_wakaruby.$(today).patch
+	git diff origin/master > $(product_name).$(today).patch
+
+.PHONY : patch-branch
+patch-branch :
+	git switch -c patch-$(today)
+
+.PHONY : switch-master
+switch-master :
+	git switch master
+
+.PHONY : delete-branch
+delete-branch : switch-master
+	git branch --list "patch*" | xargs -n 1 git branch -D
+
+.PHONY : clean-patch
+clean-patch :
+	rm -f ./*.patch
 
 .PHONY : clean
-clean :
-	rm -f *.patch
+clean : clean-patch
+
+.PHONY : copy2win-patch
+copy2win-patch :
+	cp *.patch $$WIN_HOME/Downloads/
